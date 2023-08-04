@@ -39,6 +39,8 @@ def main():
     """
     Main function to run the legal chatbot
     """
+    print("Welcome to the legal chatbot!")
+    print("Please wait while we load the document and set up the LLM...")
     web_url = "https://www.gesetze-im-internet.de/englisch_aufenthg/englisch_aufenthg.html"
     chunk_size = 500
     chunk_overlap = 20
@@ -69,6 +71,7 @@ def main():
     # chat_llm = AI21(ai21_api_key=ai21_api_key)
     
     while query != 'exit':
+        print("Thinking...")
         result, chat_history = legal_bot.get_answer_for_query_and_context_from_llm(
             query=query, 
             chat_history=chat_history, 

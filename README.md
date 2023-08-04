@@ -20,7 +20,7 @@ JINACHAT_API_KEY = your_secret_api_key
 Note: You need to only add those API keys which you will be using but COHERE_API_KEY is mandatory.
 
 ## Usage
-1. Run `python legal_bot.py` to start the chatbot.
+1. Run `python legal_chat.py` to start the chatbot.
 2. Select the chatbot you want to use.
 3. Type in your question and press enter.
 4. The chatbot will respond with an answer.
