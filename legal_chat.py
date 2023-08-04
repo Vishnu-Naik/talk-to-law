@@ -36,6 +36,9 @@ from langchain.chat_models import ChatOpenAI, JinaChat
 
 
 def main():
+    """
+    Main function to run the legal chatbot
+    """
     web_url = "https://www.gesetze-im-internet.de/englisch_aufenthg/englisch_aufenthg.html"
     chunk_size = 500
     chunk_overlap = 20

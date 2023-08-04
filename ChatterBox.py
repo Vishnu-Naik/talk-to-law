@@ -17,6 +17,14 @@ from typing import Union
 
 
 class ChatterBox:
+    """
+    ChatterBox class to load document, split document, and get answer for query and context from LLM
+    The class is designed to be used with the following workflow:
+    1. Load document
+    2. Split document
+    3. Get vector store db
+    4. Get answer for query and context from LLM
+    """
     def __init__(self):
         self.documents = None
         self.doc_content = None
@@ -24,6 +32,12 @@ class ChatterBox:
         self.vector_store_db = None
 
     def load_document(self, media_type, **kwargs):
+        """
+        Load document from web or pdf and store it in documents and contents in doc_content variable of the class
+        :param media_type: web or pdf
+        :param kwargs: url for web, path for pdf
+
+        """
         loader = None
         if media_type == 'web':
             web_url = kwargs.get('url')
@@ -38,6 +52,13 @@ class ChatterBox:
         self.doc_content = self.documents[0].page_content
     
     def split_document(self, split_type='recursive', chunk_size=500, chunk_overlap=20, doc_separator: Union[list, str] = []):
+        """
+        Split document into chunks and store it in splits variable of the class
+        :param split_type: recursive, character, token
+        :param chunk_size: size of each chunk
+        :param chunk_overlap: overlap between chunks
+        :param doc_separator: separator for splitting document, if recursive, then it is a list of separators
+        """
         if self.doc_content is None:
             raise ValueError('Document not loaded')
 
@@ -70,7 +91,13 @@ class ChatterBox:
             
         self.splits = splitter.split_text(self.doc_content)
         
-    def get_vector_store_db(self, *, persist_directory: str='docs/chroma/', embeddings):
+    def get_vector_store_db(self, *, persist_directory: str='docs/chroma/', embeddings) -> Chroma:
+        """
+        Create vector store db from splits and store it in vector_store_db variable of the class
+        :param persist_directory: directory to store the vector store db
+        :param embeddings: embeddings to be used for vector store db
+        :return: vector store db
+        """
         croma_db = Chroma(
             persist_directory=persist_directory,
             embedding_function=embeddings
@@ -79,6 +106,14 @@ class ChatterBox:
         return self.vector_store_db
     
     def semantic_search_query_on_db(self, query: str, num_results=10, compress=True, **kwargs):
+        """
+        Search query on vector store db and return the results
+        :param query: query to be searched
+        :param num_results: number of results to be returned
+        :param compress: whether to compress the results or not
+        :param kwargs: llm for compression
+        :return: results
+        """
         if not compress:
             return self.vector_store_db.max_marginal_relevance_search(query, k=num_results)
         else:
@@ -94,7 +129,11 @@ class ChatterBox:
             return compression_retriever.get_relevant_documents(query)
     
     @staticmethod
-    def formulate_prompt():
+    def formulate_prompt() -> PromptTemplate:
+        """
+        Prompt template for question answering from LLM
+        :return: prompt template
+        """
         template = """HI, Use the following pieces of context to answer the question at the end. 
         If you don't know the answer, just say that you don't know, don't try to make up an answer. 
         Use three sentences maximum. Keep the answer as concise as possible. 
@@ -105,6 +144,13 @@ class ChatterBox:
         return PromptTemplate(input_variables=["context", "question"],template=template,)
         
     def get_answer_for_query_and_context_from_llm(self, query: str, chat_history: str, llm):
+        """
+        Get answer for query and context from LLM
+        :param query: query to be searched
+        :param chat_history: chat history
+        :param llm: llm model
+        :return: tuple of result and chat history
+        """
         QA_CHAIN_PROMPT = self.formulate_prompt()
         result = None
         try:
