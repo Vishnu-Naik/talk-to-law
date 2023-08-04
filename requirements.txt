@@ -1,0 +1,14 @@
+langchain==0.0.249
+openai==0.27.8
+python-dotenv==1.0.0
+# ipykernel==5.5.5
+beautifulsoup4==4.12.2
+tiktoken==0.4.0
+chromadb
+cohere==4.18.0
+pypdf==3.14.0
+ai21==1.2.4
+panel==1.2.1
+pypdf==3.14.0
+docarray
+jupyter_bokeh==3.0.7
